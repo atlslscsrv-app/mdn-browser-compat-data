@@ -10,6 +10,8 @@ const testBrowsers = require('./test-browsers');
 /** @type {Map<string, string>} */
 const filesWithErrors = new Map();
 
+const CONSOLE_ERROR = console.error;
+const CONSOLE_WARN  = console.warn;
 const argv = yargs.alias('version','v')
   .usage('$0 [[--] files...]', false, (yargs) => {
     yargs.positional('files...', {
@@ -17,10 +19,17 @@ const argv = yargs.alias('version','v')
       type: 'string'
     })
   })
-  .help().alias('help','h').alias('help','?')
+  .help().alias('help', ['h', '?'])
+  .option('silent', {
+    alias: 's',
+    description: 'Only show file errors after lint completion.',
+    type: 'boolean',
+  })
   .parse(process.argv.slice(2));
 
 let hasErrors = false;
+const {silent} = argv;
+const noop = silent && ((..._) => {});
 
 /**
  * @param {string[]} files
@@ -47,17 +56,22 @@ function load(...files) {
           hasVersionErrors = false;
         const relativeFilePath = path.relative(process.cwd(), file);
 
-        const spinner = ora({
+        const spinner = silent ? null : ora({
           stream: process.stdout,
-          text: relativeFilePath
+          text: relativeFilePath,
         });
 
-        const console_error = console.error;
-        console.error = (...args) => {
+        console.error = silent ? noop : (...args) => {
           spinner.stream = process.stderr;
           spinner.fail(relativeFilePath);
-          console.error = console_error;
+          console.error = CONSOLE_ERROR;
           console.error(...args);
+        }
+
+        /** @type {any[][]} */
+        let warnings = [];
+        console.warn = silent ? noop : (...args) => {
+          warnings.push(args);
         }
 
         try {
@@ -77,8 +91,10 @@ function load(...files) {
           hasErrors = true;
           filesWithErrors.set(relativeFilePath, file);
         } else {
-          console.error = console_error;
-          spinner.succeed();
+          console.error = CONSOLE_ERROR;
+          console.warn  = CONSOLE_WARN;
+          spinner && spinner.succeed();
+          warnings.forEach(args => console.warn(...args));
         }
       }
 
@@ -114,7 +130,7 @@ if (argv.files) {
 }
 
 if (hasErrors) {
-  console.warn("");
+  !silent && console.warn("");
   console.warn(`Problems in ${filesWithErrors.size} file${filesWithErrors.size > 1 ? 's' : ''}:`);
   for (const [fileName, file] of filesWithErrors) {
     console.warn(fileName);
@@ -132,4 +148,6 @@ if (hasErrors) {
     }
   }
   process.exit(1);
+} else if (silent) {
+  console.log('Problems in 0 files.');
 }
