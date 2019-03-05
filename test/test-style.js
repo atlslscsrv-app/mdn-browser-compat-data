@@ -24,6 +24,10 @@ function orderSupportBlock(key, value) {
   return value;
 }
 
+/**
+ * @param {string} str The string to escape invisibles in.
+ * @returns {string} The string with invisible characters escaped.
+ */
 function escapeInvisibles(str) {
   const invisibles = [
     ['\b', '\\b'],
@@ -43,6 +47,11 @@ function escapeInvisibles(str) {
   return finalString;
 }
 
+/**
+ * @param {string} actual
+ * @param {string} expected
+ * @returns {string} The first differing line, if any.
+ */
 function jsonDiff(actual, expected) {
   var actualLines = actual.split(/\n/);
   var expectedLines = expected.split(/\n/);
@@ -58,6 +67,10 @@ function jsonDiff(actual, expected) {
   }
 }
 
+/**
+ * @param {string} filename
+ * @returns {boolean} If the file contains errors
+ */
 function testStyle(filename) {
   let hasErrors = false;
   let actual = fs.readFileSync(filename, 'utf-8').trim();

@@ -3,11 +3,17 @@ const path = require('path');
 const browsers = require('..').browsers;
 const compareVersions = require('compare-versions');
 
+/** @type {Object<string, string[]>} */
 const validBrowserVersions = {};
 for (const browser of Object.keys(browsers)) {
   validBrowserVersions[browser] = Object.keys(browsers[browser].releases);
 }
 
+/**
+ * @param {string} browserIdentifier
+ * @param {import('../types').VersionValue} version
+ * @returns {boolean} If the version is valid.
+ */
 function isValidVersion(browserIdentifier, version) {
   if (typeof version === "string") {
     return validBrowserVersions[browserIdentifier].includes(version);
@@ -16,15 +22,22 @@ function isValidVersion(browserIdentifier, version) {
   }
 }
 
+/**
+ * @param {string} dataFilename
+ */
 function testVersions(dataFilename) {
   const data = require(dataFilename);
   let hasErrors = false;
 
+  /**
+   * @param {import('../types').SupportBlock} supportData
+   */
   function checkVersions(supportData) {
     const browsersToCheck = Object.keys(supportData);
     for (const browser of browsersToCheck) {
       if (validBrowserVersions[browser]) {
 
+        /** @type {import('../types').SimpleSupportStatement[]} */
         const supportStatements = [];
         if (Array.isArray(supportData[browser])) {
           Array.prototype.push.apply(supportStatements, supportData[browser]);
@@ -58,10 +71,16 @@ function testVersions(dataFilename) {
     }
   }
 
+  /**
+   * @param {import('../types').Identifier} data
+   */
   function findSupport(data) {
+    if (data.__compat && data.__compat.support) {
+      checkVersions(data.__compat.support);
+    }
     for (const prop in data) {
-      if (prop === 'support') {
-        checkVersions(data[prop]);
+      if (prop === '__compat') {
+        continue;
       }
       const sub = data[prop];
       if (typeof(sub) === "object") {

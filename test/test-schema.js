@@ -5,6 +5,11 @@ const path = require('path');
 
 const ajv = new Ajv({ jsonPointers: true, allErrors: true });
 
+/**
+ * @param {string} dataFilename
+ * @param {string} [schemaFilename]
+ * @returns {boolean} If the file contains errors
+ */
 function testSchema(dataFilename, schemaFilename = './../schemas/compat-data.schema.json') {
   const schema = require(schemaFilename);
   const data   = require(dataFilename);

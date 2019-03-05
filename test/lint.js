@@ -12,7 +12,7 @@ const filesWithErrors = new Map();
 
 const argv = yargs.alias('version','v')
   .usage('$0 [[--] files...]', false, (yargs) => {
-    yargs.positional('files...', {
+    return yargs.positional('files...', {
       description: 'The files to lint',
       type: 'string'
     })
@@ -26,9 +26,6 @@ let hasErrors = false;
  * @param {string[]} files
  */
 function load(...files) {
-  if (files.length === 1 && Array.isArray(files[0])) {
-    files = files[0];
-  }
   for (let file of files) {
     if (file.indexOf(__dirname) !== 0) {
       file = path.resolve(__dirname, '..', file);
@@ -54,7 +51,7 @@ function load(...files) {
 
         const console_error = console.error;
         console.error = (...args) => {
-          spinner.stream = process.stderr;
+          spinner['stream'] = process.stderr;
           spinner.fail(relativeFilePath);
           console.error = console_error;
           console.error(...args);
@@ -94,7 +91,7 @@ function load(...files) {
 }
 
 if (argv.files) {
-  load(argv.files);
+  load(...argv.files);
 } else {
   load(
     'api',

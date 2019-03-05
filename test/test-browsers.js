@@ -1,7 +1,7 @@
 'use strict';
 const path = require('path');
 
-/** @type {Record<string, string[]>} */
+/** @type {Object<string, string[]>} */
 const browsers = {
   desktop: [
     'chrome',
@@ -38,7 +38,7 @@ const browsers = {
 };
 
 /**
- * @param {*} data
+ * @param {import('../types').Identifier} data
  * @param {string[]} displayBrowsers
  * @param {string[]} requiredBrowsers
  * @param {string} category
@@ -62,7 +62,7 @@ function processData(data, displayBrowsers, requiredBrowsers, category, logger, 
   }
   for (const key in data) {
     if (key === "__compat") continue;
-    hasErrors |= processData(data[key], displayBrowsers, requiredBrowsers, category, logger, (path && path.length > 0) ? `${path}.${key}` : key);
+    hasErrors = hasErrors || processData(data[key], displayBrowsers, requiredBrowsers, category, logger, (path && path.length > 0) ? `${path}.${key}` : key);
   }
   return hasErrors;
 }
