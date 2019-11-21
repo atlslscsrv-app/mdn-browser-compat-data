@@ -1,10 +1,13 @@
 'use strict';
+Object.defineProperty(exports, '__esModule', { value: true });
 const { platform } = require('os');
 const chalk = require('chalk');
 
 /**
  * @typedef {object} Logger
  * @property {(...message: unknown[]) => void} error
+ *
+ * @typedef {[number, number] | [null, null]} Pos
  */
 
 /** @type {{readonly [char: string]: string}} */
@@ -17,15 +20,20 @@ const INVISIBLES_MAP = Object.freeze(
     '\v': '\\v', // ␋ (0x0B)
     '\f': '\\f', // ␌ (0x0C)
     '\r': '\\r', // ␍ (0x0D)
-  })
+  }),
 );
+exports.INVISIBLES_MAP = INVISIBLES_MAP;
+
 const INVISIBLES_REGEXP = /[\0\x08-\x0D]/g;
+exports.INVISIBLES_REGEXP = INVISIBLES_REGEXP;
 
 /** Used to check if the process is running in a CI environment. */
 const IS_CI = process.env.CI && String(process.env.CI).toLowerCase() === 'true';
+exports.IS_CI = IS_CI;
 
 /** Determines if the OS is Windows */
 const IS_WINDOWS = platform() === 'win32';
+exports.IS_WINDOWS = IS_WINDOWS;
 
 /**
  * Escapes common invisible characters.
@@ -39,13 +47,14 @@ function escapeInvisibles(str) {
     return INVISIBLES_MAP[char] || char;
   });
 }
+exports.escapeInvisibles = escapeInvisibles;
 
 /**
  * Gets the row and column matching the index in a string.
  *
  * @param {string} str
  * @param {number} index
- * @return {[number, number] | [null, null]}
+ * @return {Pos}
  */
 function indexToPosRaw(str, index) {
   let line = 1,
@@ -82,6 +91,7 @@ function indexToPosRaw(str, index) {
 
   return [line, col];
 }
+exports.indexToPosRaw = indexToPosRaw;
 
 /**
  * Gets the row and column matching the index in a string and formats it.
@@ -91,9 +101,23 @@ function indexToPosRaw(str, index) {
  * @return {string} The line and column in the form of: `"(Ln <ln>, Col <col>)"`
  */
 function indexToPos(str, index) {
-  const [line, col] = indexToPosRaw(str, index);
-  return `(Ln ${line}, Col ${col})`;
+  return formatPos(indexToPosRaw(str, index));
 }
+exports.indexToPos = indexToPos;
+
+/**
+ * Applies default formatting to the position tuple.
+ *
+ * @param {Readonly<[any, any]>} pos
+ * @return {string} The line and column in the form of: `"(Ln <ln>, Col <col>)"`
+ */
+function formatPos(pos) {
+  if (!pos || pos.length !== 2) {
+    throw new TypeError('pos must be a tuple with a length of 2');
+  }
+  return `(Ln ${pos[0]}, Col ${pos[1]})`;
+}
+exports.formatPos = formatPos;
 
 /**
  * @param {string} actual
@@ -112,13 +136,4 @@ function jsonDiff(actual, expected) {
     }
   }
 }
-
-module.exports = {
-  INVISIBLES_MAP,
-  IS_CI,
-  IS_WINDOWS,
-  escapeInvisibles,
-  indexToPosRaw,
-  indexToPos,
-  jsonDiff,
-};
+exports.jsonDiff = jsonDiff;
