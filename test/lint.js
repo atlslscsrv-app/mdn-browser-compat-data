@@ -1,10 +1,12 @@
-'use strict';
-const fs = require('fs');
-const path = require('path');
-const ora = require('ora');
-const yargs = require('yargs');
-const chalk = require('chalk');
-const {
+#!/usr/bin/env node
+/* Any copyright is dedicated to the Public Domain.
+ * http://creativecommons.org/publicdomain/zero/1.0/ */
+
+// ESM dependencies:
+import * as fs from 'fs';
+import * as path from 'path';
+import { fileURLToPath } from 'url';
+import {
   testBrowsers,
   testLinks,
   testPrefix,
@@ -14,11 +16,20 @@ const {
   testVersions,
   testConsistency,
   testDescriptions,
-} = require('./linter/index.js');
-const { IS_CI } = require('./utils.js');
-const testCompareFeatures = require('./test-compare-features');
-const testMigrations = require('./test-migrations');
-const testFormat = require('./test-format');
+} from './linter/index.js';
+import { IS_CI } from './utils.js';
+import testCompareFeatures from './test-compare-features.js';
+import testMigrations from './test-migrations.js';
+import testFormat from './test-format.js';
+
+// CommonJS dependencies:
+import ora from 'ora';
+import yargs from 'yargs';
+import chalk from 'chalk';
+
+// CommonJS 'globals':
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 /** @type {Map<string, string>} */
 const filesWithErrors = new Map();

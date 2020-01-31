@@ -1,9 +1,11 @@
-'use strict';
-const fs = require('fs');
-const url = require('url');
-const chalk = require('chalk');
-const { IS_WINDOWS, indexToPos, jsonDiff } = require('../utils.js');
-const compareFeatures = require('../../scripts/compare-features');
+// ESM dependencies:
+import * as fs from 'fs';
+import * as url from 'url';
+import { IS_WINDOWS, indexToPos, jsonDiff } from '../utils.js';
+
+// CommonJS dependencies:
+import chalk from 'chalk';
+import compareFeatures from '../../scripts/compare-features.js';
 
 /**
  * Return a new "support_block" object whose first-level properties
@@ -139,7 +141,10 @@ function processData(filename, logger) {
   }
 }
 
-function testStyle(filename) {
+/**
+ * @param {string} filename
+ */
+export default function testStyle(filename) {
   /** @type {string[]} */
   const errors = [];
   const logger = {
@@ -164,5 +169,3 @@ function testStyle(filename) {
   }
   return false;
 }
-
-module.exports = testStyle;

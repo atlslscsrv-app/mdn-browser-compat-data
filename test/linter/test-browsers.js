@@ -1,6 +1,17 @@
-'use strict';
-const path = require('path');
-const chalk = require('chalk');
+// ESM dependencies:
+import * as path from 'path';
+import { fileURLToPath } from 'url';
+import { createRequire } from 'module';
+
+// CommonJS dependencies:
+import chalk from 'chalk';
+
+// CommonJS 'globals':
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// TODO: Use `fs.readFileSync` and `JSON.parse`
+const require = createRequire(import.meta.url);
 
 /**
  * @typedef {import('../../types').Identifier} Identifier
@@ -33,7 +44,6 @@ const browsers = {
  * @param {string} category
  * @param {Logger} logger
  * @param {string} [path]
- * @returns {boolean}
  */
 function processData(
   data,
@@ -109,7 +119,7 @@ function processData(
  * @param {string} filename
  * @returns {boolean} If the file contains errors
  */
-function testBrowsers(filename) {
+export default function testBrowsers(filename) {
   const relativePath = path.relative(
     path.resolve(__dirname, '..', '..'),
     filename,
@@ -166,5 +176,3 @@ function testBrowsers(filename) {
   }
   return false;
 }
-
-module.exports = testBrowsers;

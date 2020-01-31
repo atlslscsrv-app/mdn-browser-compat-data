@@ -1,6 +1,17 @@
-'use strict';
-const path = require('path');
-const chalk = require('chalk');
+// ESM dependencies:
+import * as path from 'path';
+import { fileURLToPath } from 'url';
+import { createRequire } from 'module';
+
+// CommonJS dependencies:
+import chalk from 'chalk';
+
+// CommonJS 'globals':
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// TODO: Use `fs.readFileSync` and `JSON.parse`
+const require = createRequire(import.meta.url);
 
 /**
  * @typedef {import('../../types').Identifier} Identifier
@@ -101,7 +112,7 @@ function checkRealValues(supportData, blockList, relPath, logger) {
 /**
  * @param {string} filename
  */
-function testRealValues(filename) {
+export default function testRealValues(filename) {
   const relativePath = path.relative(
     path.resolve(__dirname, '..', '..'),
     filename,
@@ -156,5 +167,3 @@ function testRealValues(filename) {
   }
   return false;
 }
-
-module.exports = testRealValues;

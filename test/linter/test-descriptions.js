@@ -1,4 +1,11 @@
-const chalk = require('chalk');
+// ESM dependencies:
+import { createRequire } from 'module';
+
+// CommonJS dependencies:
+import chalk from 'chalk';
+
+// TODO: Use `fs.readFileSync` and `JSON.parse`
+const require = createRequire(import.meta.url);
 
 /**
  * @typedef {import('../../types').Identifier} Identifier
@@ -78,7 +85,7 @@ function hasCorrectWebWorkersDescription(apiData, apiName, logger) {
 /**
  * @param {string} filename
  */
-function testDescriptions(filename) {
+export default function testDescriptions(filename) {
   /** @type {Identifier} */
   const data = require(filename);
 
@@ -114,5 +121,3 @@ function testDescriptions(filename) {
   }
   return false;
 }
-
-module.exports = testDescriptions;

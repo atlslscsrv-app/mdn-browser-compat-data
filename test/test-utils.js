@@ -1,7 +1,13 @@
-'use strict';
-const ora = require('ora');
-const chalk = require('chalk');
-const { IS_CI, escapeInvisibles } = require('./utils.js');
+#!/usr/bin/env node
+/* Any copyright is dedicated to the Public Domain.
+ * http://creativecommons.org/publicdomain/zero/1.0/ */
+
+// ESM dependencies:
+import { IS_CI, escapeInvisibles } from './utils.js';
+
+// CommonJS dependencies:
+import ora from 'ora';
+import chalk from 'chalk';
 
 it('`escapeInvisibles()` works correctly', () => {
   const EXPECTED = [

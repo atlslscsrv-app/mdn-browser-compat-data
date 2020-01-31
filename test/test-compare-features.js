@@ -1,19 +1,15 @@
-#!/usr/bin/env node
 /* Any copyright is dedicated to the Public Domain.
  * http://creativecommons.org/publicdomain/zero/1.0/ */
 
-'use strict';
-const fs = require('fs');
-const path = require('path');
-const chalk = require('chalk');
-
-const compareFeatures = require('../scripts/compare-features');
+// CommonJS dependencies:
+import chalk from 'chalk';
+import compareFeatures from '../scripts/compare-features.js';
 
 /**
  * A unit test for the compareFeatures() function, to ensure that features are sorted as expected.
  * @returns {boolean} If the sorter isn't functioning properly
  */
-const testFeatureOrder = () => {
+export default () => {
   const input = [
     'foobar',
     'Foo',
@@ -63,5 +59,3 @@ const testFeatureOrder = () => {
   }
   return false;
 };
-
-module.exports = testFeatureOrder;

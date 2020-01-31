@@ -1,7 +1,9 @@
-'use strict';
-const fs = require('fs');
-const chalk = require('chalk');
-const { IS_WINDOWS, indexToPos, indexToPosRaw } = require('../utils.js');
+// ESM dependencies:
+import * as fs from 'fs';
+import { IS_WINDOWS, indexToPos, indexToPosRaw } from '../utils.js';
+
+// CommonJS dependencies:
+import chalk from 'chalk';
 
 /**
  * @typedef {import('../utils').Logger} Logger
@@ -9,7 +11,6 @@ const { IS_WINDOWS, indexToPos, indexToPosRaw } = require('../utils.js');
 
 /**
  * @param {string} filename
- * @param {Logger} logger
  */
 function processData(filename) {
   let errors = [];
@@ -205,7 +206,7 @@ function processLink(errors, actual, regexp, matchHandler) {
 /**
  * @param {string} filename
  */
-function testLinks(filename) {
+export default function testLinks(filename) {
   /** @type {Object[]} */
   let errors = processData(filename);
 
@@ -224,5 +225,3 @@ function testLinks(filename) {
   }
   return false;
 }
-
-module.exports = testLinks;

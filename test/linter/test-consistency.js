@@ -1,7 +1,12 @@
-'use strict';
-const path = require('path');
-const compareVersions = require('compare-versions');
-const chalk = require('chalk');
+// ESM dependencies:
+import { createRequire } from 'module';
+
+// CommonJS dependencies:
+import compareVersions from 'compare-versions';
+import chalk from 'chalk';
+
+// TODO: Use `fs.readFileSync` and `JSON.parse`
+const require = createRequire(import.meta.url);
 
 /**
  * @typedef {import('../../types').CompatStatement} CompatStatement
@@ -352,7 +357,7 @@ class ConsistencyChecker {
 /**
  * @param {string} filename
  */
-function testConsistency(filename) {
+export default function testConsistency(filename) {
   /** @type {Identifier} */
   let data = require(filename);
 
@@ -399,5 +404,3 @@ function testConsistency(filename) {
   }
   return false;
 }
-
-module.exports = testConsistency;

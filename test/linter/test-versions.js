@@ -1,6 +1,12 @@
-'use strict';
-const compareVersions = require('compare-versions');
-const chalk = require('chalk');
+// ESM dependencies:
+import { createRequire } from 'module';
+
+// CommonJS dependencies:
+import compareVersions from 'compare-versions';
+import chalk from 'chalk';
+
+// TODO: Use `fs.readFileSync` and `JSON.parse`
+const require = createRequire(import.meta.url);
 
 /**
  * @typedef {import('../../types').Identifier} Identifier
@@ -125,7 +131,7 @@ function checkVersions(supportData, relPath, logger) {
 /**
  * @param {string} filename
  */
-function testVersions(filename) {
+export default function testVersions(filename) {
   /** @type {Identifier} */
   const data = require(filename);
 
@@ -168,5 +174,3 @@ function testVersions(filename) {
   }
   return false;
 }
-
-module.exports = testVersions;

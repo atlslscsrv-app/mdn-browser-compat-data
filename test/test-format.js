@@ -1,8 +1,10 @@
-'use strict';
-const { execSync } = require('child_process');
-const chalk = require('chalk');
+// ESM dependencies:
+import { execSync } from 'child_process';
 
-const testFormat = () => {
+// CommonJS dependencies:
+import chalk from 'chalk';
+
+export default () => {
   try {
     execSync('npx prettier --check "**/*.js" "**/*.ts" "**/*.md"', {
       stdio: 'inherit',
@@ -20,5 +22,3 @@ const testFormat = () => {
 
   return false;
 };
-
-module.exports = testFormat;

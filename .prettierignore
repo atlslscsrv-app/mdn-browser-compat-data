@@ -1,4 +1,5 @@
 *.json
+!package.json
 !/*.json
 !/schemas/*.json
 

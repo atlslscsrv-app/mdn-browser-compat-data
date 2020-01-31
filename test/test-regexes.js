@@ -1,5 +1,9 @@
-'use strict';
-const assert = require('assert');
+#!/usr/bin/env node
+/* Any copyright is dedicated to the Public Domain.
+ * http://creativecommons.org/publicdomain/zero/1.0/ */
+
+// ESM dependencies:
+import * as assert from 'assert';
 
 /**
  * @typedef {import('../types').Identifier} Identifier
@@ -10,15 +14,18 @@ const assert = require('assert');
  * @property {string[]} misses
  */
 
-/** @type {Identifier} */
-const bcd = require('..');
+// CommonJS dependencies:
+import bcd from '..';
 
 /**
  * @param {string} dottedFeature
  */
 function lookup(dottedFeature) {
   const x = dottedFeature.split('.');
-  const feature = x.reduce((prev, current) => prev[current], bcd);
+  const feature = x.reduce(
+    (prev, current) => prev[current],
+    /** @type {Identifier} */ (bcd),
+  );
   return feature;
 }
 

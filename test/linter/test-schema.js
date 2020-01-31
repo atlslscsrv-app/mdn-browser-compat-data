@@ -1,8 +1,13 @@
-'use strict';
-const Ajv = require('ajv');
-const betterAjvErrors = require('better-ajv-errors');
-const path = require('path');
-const chalk = require('chalk');
+// ESM dependencies:
+import { createRequire } from 'module';
+
+// CommonJS dependencies:
+import Ajv from 'ajv';
+import betterAjvErrors from 'better-ajv-errors';
+import chalk from 'chalk';
+
+// TODO: Use `fs.readFileSync` and `JSON.parse`
+const require = createRequire(import.meta.url);
 
 const ajv = new Ajv({ jsonPointers: true, allErrors: true });
 
@@ -10,7 +15,7 @@ const ajv = new Ajv({ jsonPointers: true, allErrors: true });
  * @param {string} dataFilename
  * @param {string} [schemaFilename]
  */
-function testSchema(
+export default function testSchema(
   dataFilename,
   schemaFilename = './../../schemas/compat-data.schema.json',
 ) {
@@ -34,5 +39,3 @@ function testSchema(
   }
   return false;
 }
-
-module.exports = testSchema;
